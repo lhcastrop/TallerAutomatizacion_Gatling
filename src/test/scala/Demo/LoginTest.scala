@@ -34,7 +34,7 @@ class LoginTest extends Simulation{
       .post("users/login")
       .body(StringBody("""{"email": "emailInvalido", "password": "12345678"}""")).asJson
       .check(status.in(401))
-    )
+    )  
 
   setUp(
     Login.inject(atOnceUsers(50)),
