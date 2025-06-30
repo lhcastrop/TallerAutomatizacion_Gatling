@@ -3,7 +3,7 @@ package Demo
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import Demo.Data._
-
+  
 class CreateContact extends Simulation {
 
   val httpConf = http
