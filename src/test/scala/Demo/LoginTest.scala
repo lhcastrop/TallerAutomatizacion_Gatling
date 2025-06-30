@@ -52,7 +52,8 @@ class LoginTest extends Simulation{
 
   // 5. Ejecución de escenarios
   setUp(
-    scn.inject(rampUsers(10).during(10)),
+    //scn.inject(rampUsers(10).during(10)),
+    validLogin.inject(atOnceUsers(50)),
     invalidCredentialsLogin.inject(rampUsers(10).during(10)),
     invalidEmailFormat.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
