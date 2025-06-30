@@ -13,7 +13,7 @@ class CreateContact extends Simulation {
   val crearContacto = scenario("Crear Contacto")
     .exec(
       http("Login para obtener token")
-        .post("users/login")
+        .post(s"users/login")
         .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
         .check(status.is(200))
         .check(jsonPath("$.token").saveAs("authToken"))
