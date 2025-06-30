@@ -54,14 +54,14 @@ class LoginTest extends Simulation{
         .body(StringBody(
           """{"email": "emailInvalido", "password": "12345678"}"""
         )).asJson
-        .check(status.in(400 to 422)) // Dependiendo del backend
+        .check(status.in(401)) // Dependiendo del backend
     )
 
   // 5. Ejecución de escenarios
   setUp(
     scn.inject(rampUsers(10).during(10)),
-    invalidCredentialsLogin.inject(rampUsers(2).during(5)),
-    invalidEmailFormat.inject(rampUsers(2).during(5))
+    invalidCredentialsLogin.inject(rampUsers(10).during(10)),
+    invalidEmailFormat.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
 }
 
