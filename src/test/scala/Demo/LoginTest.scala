@@ -6,57 +6,41 @@ import Demo.Data._
 
 class LoginTest extends Simulation{
 
-  // 1 Http Conf
   val httpConf = http.baseUrl(url)
     .acceptHeader("application/json")
-    //Verificar de forma general para todas las solicitudes
 
-  // 2 Scenario Definition
-  val Login = scenario("Login").
-    exec(http("login")
-      .post(s"users/login")
+  val Login = scenario("Login")
+    .exec(http("login")
+      .post("users/login")
       .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
-         //Validar status 200 del servicio
       .check(status.is(200))
       .check(jsonPath("$.token").saveAs("authToken"))
     ).exitHereIfFailed
-     .exec(
-      http("Obtener contactos con token")
-        .get("contacts")
-        .header("Authorization", "Bearer ${authToken}")
-        .check(status.is(200))
+    .exec(http("Obtener contactos con token")
+      .get("contacts")
+      .header("Authorization", "Bearer ${authToken}")
+      .check(status.is(200))
     )
 
-  // 3. Escenario: Login con credenciales inválidas
   val credencialesLoginInvalidas = scenario("Login con credenciales inválidas")
-    .exec(
-      http("Login inválido")
-        .post("users/login")
-        .body(StringBody(
-          """{"email": "usuario@falso.com", "password": "passwordIncorrecto"}"""
-        )).asJson
-        .check(status.is(401)) // O 400 según cómo responde la API
-        .check(jsonPath("$.error").is("Incorrect email or password"))
+    .exec(http("Login inválido")
+      .post("users/login")
+      .body(StringBody("""{"email": "usuario@falso.com", "password": "passwordIncorrecto"}""")).asJson
+      .check(status.is(401))
+      .check(jsonPath("$.error").is("Incorrect email or password"))
     )
 
-  // 4. Escenario: Login con formato inválido de email
   val formatoEmailIncorrecto = scenario("Login con email malformado")
-    .exec(
-      http("Login con email inválido")
-        .post("users/login")
-        .body(StringBody(
-          """{"email": "emailInvalido", "password": "12345678"}"""
-        )).asJson
-        .check(status.in(401)) 
+    .exec(http("Login con email inválido")
+      .post("users/login")
+      .body(StringBody("""{"email": "emailInvalido", "password": "12345678"}""")).asJson
+      .check(status.in(401))
     )
 
-  // 5. Ejecución de escenarios
   setUp(
-    //scn.inject(rampUsers(10).during(10)),
     Login.inject(atOnceUsers(50)),
     credencialesLoginInvalidas.inject(rampUsers(10).during(10)),
     formatoEmailIncorrecto.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
 }
-
 
