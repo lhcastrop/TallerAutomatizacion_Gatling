@@ -47,6 +47,6 @@ class CreateContact extends Simulation {
         .check(status.is(200))
     )}
   setUp(
-    crearContacto.inject(rampUsers(10).during(10))
+    crearContacto.inject(atOnceUsers(100))
     ).protocols(httpConf)
 } 
