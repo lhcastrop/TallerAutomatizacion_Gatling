@@ -11,7 +11,7 @@ class LoginTest extends Simulation{
 
   val Login = scenario("Login")
     .exec(http("login")
-      .post("users/login")
+      .post(s"users/login")
       .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
       .check(status.is(200))
       .check(jsonPath("$.token").saveAs("authToken"))
