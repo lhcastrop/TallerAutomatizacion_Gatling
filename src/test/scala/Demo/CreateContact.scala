@@ -10,7 +10,7 @@ class CreateContact extends Simulation {
     .baseUrl(url)
     .acceptHeader("application/json")
 
-  val createContactScn = scenario("Crear Contacto")
+  val crearContacto = scenario("Crear Contacto")
     .exec(
       http("Login para obtener token")
         .post(s"users/login")
@@ -47,6 +47,6 @@ class CreateContact extends Simulation {
         .check(status.is(200))
     )}
   setUp(
-    createContactScn.inject(rampUsers(10).during(10))
-  ).protocols(httpConf)
+    crearContacto.inject(rampUsers(10).during(10))
+    ).protocols(httpConf)
 } 
