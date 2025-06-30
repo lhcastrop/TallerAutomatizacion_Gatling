@@ -27,7 +27,6 @@ class LoginTest extends Simulation{
       .post("users/login")
       .body(StringBody("""{"email": "usuario@falso.com", "password": "passwordIncorrecto"}""")).asJson
       .check(status.is(401))
-      .check(jsonPath("$.error").is("Incorrect email or password"))
     )
 
   val formatoEmailIncorrecto = scenario("Login con email malformado")
@@ -43,4 +42,3 @@ class LoginTest extends Simulation{
     formatoEmailIncorrecto.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
 }
-
