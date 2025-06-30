@@ -9,7 +9,7 @@ class CreateContact extends Simulation {
   val httpConf = http
     .baseUrl(url)
     .acceptHeader("application/json")
-
+ 
   val crearContacto = scenario("Crear Contacto")
     .exec(
       http("Login para obtener token")
