@@ -38,7 +38,7 @@ class LoginTest extends Simulation{
 
   setUp(
     //Login.inject(atOnceUsers(50)),
-    Login.inject(atOnceUsers(rampUsers(10).during(100))),
+    Login.inject(rampUsers(10).during(100)),
     credencialesLoginInvalidas.inject(rampUsers(10).during(10)),
     formatoEmailIncorrecto.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
