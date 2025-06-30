@@ -9,19 +9,18 @@ class CreateContact extends Simulation {
   val httpConf = http
     .baseUrl(url)
     .acceptHeader("application/json")
- 
+
   val crearContacto = scenario("Crear Contacto")
     .exec(
       http("Login para obtener token")
-        .post(s"users/login")
+        .post("users/login")
         .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
         .check(status.is(200))
         .check(jsonPath("$.token").saveAs("authToken"))
     ).exitHereIfFailed
-    .repeat(1) {
     .exec(
       http("Crear nuevo contacto")
-        .post(s"contacts")
+        .post("contacts")
         .header("Authorization", "Bearer ${authToken}")
         .body(StringBody(
           s"""{
@@ -45,8 +44,9 @@ class CreateContact extends Simulation {
         .get("contacts")
         .header("Authorization", "Bearer ${authToken}")
         .check(status.is(200))
-    )}
+    )
+
   setUp(
     crearContacto.inject(atOnceUsers(100))
-    ).protocols(httpConf)
-} 
+  ).protocols(httpConf)
+}
