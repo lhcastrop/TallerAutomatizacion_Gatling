@@ -20,13 +20,6 @@ class LoginTest extends Simulation{
       .check(status.is(200))
       .check(jsonPath("$.token").saveAs("authToken"))
     )
-    .exec(
-      http("Create Contact")
-        .post(s"contacts")
-        .header("Authorization", "Bearer ${authToken}")
-        .body(StringBody(s"""{"firstName": "Leonardo","lastName": "Castro","birthdate": "1991-01-01","email": "pruebasleo@hotmail.com","phone": "8005555555","street1": "1 Main St.","street2": "Apartment A","city": "Anytown","stateProvince": "KS","postalCode": "12345","country": "USA"}""")).asJson
-        .check(status.is(201))
-    )
      .exec(
       http("Obtener contactos con token")
         .get("contacts")
