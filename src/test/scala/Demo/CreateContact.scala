@@ -17,7 +17,8 @@ class CreateContact extends Simulation {
         .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
         .check(status.is(200))
         .check(jsonPath("$.token").saveAs("authToken"))
-    )
+    ).exitHereIfFailed
+    .repeat(1) {
     .exec(
       http("Crear nuevo contacto")
         .post(s"contacts")
@@ -44,7 +45,7 @@ class CreateContact extends Simulation {
         .get("contacts")
         .header("Authorization", "Bearer ${authToken}")
         .check(status.is(200))
-    )
+    )}
   setUp(
     createContactScn.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
