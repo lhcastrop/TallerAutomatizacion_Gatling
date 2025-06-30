@@ -48,4 +48,4 @@ class CreateContact extends Simulation {
   setUp(
     createContactScn.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
-}
+} 
