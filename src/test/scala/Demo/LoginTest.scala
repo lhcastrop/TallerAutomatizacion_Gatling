@@ -12,14 +12,14 @@ class LoginTest extends Simulation{
     //Verificar de forma general para todas las solicitudes
 
   // 2 Scenario Definition
-  val scn = scenario("Login").
+  val Login = scenario("Login").
     exec(http("login")
       .post(s"users/login")
       .body(StringBody(s"""{"email": "$email", "password": "$password"}""")).asJson
          //Validar status 200 del servicio
       .check(status.is(200))
       .check(jsonPath("$.token").saveAs("authToken"))
-    )
+    ).exitHereIfFailed
      .exec(
       http("Obtener contactos con token")
         .get("contacts")
@@ -28,7 +28,7 @@ class LoginTest extends Simulation{
     )
 
   // 3. Escenario: Login con credenciales inválidas
-  val invalidCredentialsLogin = scenario("Login con credenciales inválidas")
+  val credencialesLoginInvalidas = scenario("Login con credenciales inválidas")
     .exec(
       http("Login inválido")
         .post("users/login")
@@ -40,22 +40,22 @@ class LoginTest extends Simulation{
     )
 
   // 4. Escenario: Login con formato inválido de email
-  val invalidEmailFormat = scenario("Login con email malformado")
+  val formatoEmailIncorrecto = scenario("Login con email malformado")
     .exec(
       http("Login con email inválido")
         .post("users/login")
         .body(StringBody(
           """{"email": "emailInvalido", "password": "12345678"}"""
         )).asJson
-        .check(status.in(401)) // Dependiendo del backend
+        .check(status.in(401)) 
     )
 
   // 5. Ejecución de escenarios
   setUp(
     //scn.inject(rampUsers(10).during(10)),
-    scn.inject(atOnceUsers(50)),
-    invalidCredentialsLogin.inject(rampUsers(10).during(10)),
-    invalidEmailFormat.inject(rampUsers(10).during(10))
+    Login.inject(atOnceUsers(50)),
+    credencialesLoginInvalidas.inject(rampUsers(10).during(10)),
+    formatoEmailIncorrecto.inject(rampUsers(10).during(10))
   ).protocols(httpConf)
 }
 
